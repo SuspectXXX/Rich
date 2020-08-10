@@ -26,7 +26,7 @@
         }
         .table2 tr td {
             /*padding-right: 1rem;*/
-            padding: 0 5px;
+            padding: 0 0.4rem;
         }
     </style>
     <script type="text/javascript">
@@ -61,6 +61,7 @@
             var today = formateDate();
             $("#startTime").val(today);
             $("#endTime").val(today);
+
             function formateDate() {
                 var time = new Date();
                 if(arguments.length != 0) {
@@ -71,13 +72,52 @@
                 var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
                 var today = year + "-" + month + "-" + day;
                 return today;
-            };
+            }
+
+            function addImg(data) {
+                var imgPath = '';
+                for(var i = 0; i < data.length; i++) {
+                    imgPath += '<img src="' + data[i] + '" style="width: 1rem;">\n';
+                }
+                return imgPath;
+            }
+
+            function addHTML(data) {
+                console.log(data);
+                var _html = '';
+                for(var i = 0; i < data.length; i++) {
+                    _html += '<table class="table2">\n' +
+                        '        <tr>\n' +
+                        '            <td>' + data[i].name +'</td>\n' +
+                        '            <!--<td>苑凯歌</td>-->\n' +
+                        '            <td>' + formateDate(data[i].date) + '</td>\n' +
+                        '            <!--<td>2020-08-05</td>-->\n' +
+                        '            <td>上海</td>\n' +
+                        '            <!--<td>上海</td>-->\n' +
+                        '        </tr>\n' +
+                        '        <tr>\n' +
+                        '            <td>电源：</td>\n' +
+                        '            <td>' + data[i].power + '</td>\n' +
+                        '            <td>\n'  + addImg(data[i].powerImagePath) +
+                        '            </td>\n' +
+                        '        </tr>\n' +
+                        '        <tr>\n' +
+                        '            <td>温度：</td>\n' +
+                        '            <td>' + data[i].tempure + '</td>\n' +
+                        '            <td>\n' + addImg(data[i].tempureImagePath) +
+                        '            </td>\n' +
+                        '        </tr>\n' +
+                        '    </table>\n';
+                }
+                return _html;
+            }
+
             $("#date_select").click(function () {
                 var startTime = $("#startTime").val();
                 var endTime = $("#endTime").val();
                 $.ajax({
                     url: "/queryReport",
-                    type: 'post',
+                    type: 'get',
                     dataType: 'json',
                     // contentType: 'application/json',
                     data: {
@@ -85,7 +125,10 @@
                         endTime: endTime
                     },
                     success: function (data) {
-                        console.log(data);
+                        var html = addHTML(data.querysList);
+                        // console.log(html);
+                        $("body").append(html);
+                        $("body").trigger("create");
                     }
                 })
             })
@@ -111,31 +154,7 @@
             </td>
         </tr>
     </table>
-    <p th:text="${s}"></p>
 
-    <table class="table2" th:each="query : ${querys}">
-        <tr>
-            <td th:text="${query.name}"></td>
-            <!--<td>苑凯歌</td>-->
-            <td th:text="${#dates.format(query.date, 'yyyy-MM-dd')}"></td>
-            <!--<td>2020-08-05</td>-->
-            <td>上海</td>
-            <!--<td>上海</td>-->
-        </tr>
-        <tr>
-            <td>电源：</td>
-            <td th:text="${query.power}"></td>
-            <td>
-                <img th:each="path : ${query.powerImagePath}" th:src="${path}" style="width: 1rem;">
-            </td>
-        </tr>
-        <tr>
-            <td>温度：</td>
-            <td th:text="${query.tempure}"></td>
-            <td>
-                <img th:each="path : ${query.tempureImagePath}" th:src="${path}" style="width: 1rem;">
-            </td>
-        </tr>
-    </table>
+
 </body>
 </html>
