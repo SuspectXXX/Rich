@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,inital-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>巡检</title>
+    <link rel="stylesheet" th:href="@{/css/weui.min.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <style>
+        /*.label_style {*/
+            /*font-size: 60px;*/
+        /*}*/
+        /*.div_style {*/
+            /*margin: 100px auto;*/
+        /*}*/
+        ._table_style {
+            /*border: black;*/
+            /*border-style: solid;*/
+            margin: 20px auto;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .table_style {
+            margin: 0 auto;
+            /*border: 1px;*/
+        }
+        .radio_style {
+            zoom: 1;
+            margin-right: 0.5rem;
+            /*margin-left: 1rem;*/
+        }
+        .btn_style {
+            width: 80% !important;
+        }
+        .td_left {
+            text-align: center;
+        }
+        .td_center {
+            text-align: center;
+        }
+        .td_right {
+            text-align: center;
+            padding-left: 1rem;
+        }
+        .td_right label {
+            margin: auto auto;
+        }
+        .td_right label button {
+            display: none;
+            border-style: none;
+            color: red
+        }
+    </style>
+    <script>
+        $(function () {
+            $(":radio").click(function () {
+                var name = $(this).attr("name");
+                var value = $(this).val();
+                var $btn = $("#btn_" + name);
+                if(value == 0) {
+                    $btn.css("display", "block");
+                } else {
+                    $btn.css("display", "none");
+                }
+            });
+            $(":button").click(function () {
+                // alert(123);
+                var id = $(this).attr("id");
+                // var $btn = $(id);
+                if("btn_submit" === id) {
+                    var bool = confirm("确认提交？");
+                    if(bool === true) {
+                        alert("确定");
+                    } else {
+                        alert("取消");
+                    }
+                } else {
+                    // 调用摄像头，进行拍照
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class="_table_style">
+        <table class="table_style">
+            <tr class="tr_style">
+                <td class="td_left">电源：</td>
+                <td class="td_center">
+                    <label style="margin-right: 1rem">
+                        <input class="radio_style" type="radio" name="power" value="1">正常
+                    </label>
+                    <label>
+                        <input class="radio_style" type="radio" name="power" value="0">异常
+                    </label>
+                </td>
+                <td class="td_right">
+                    <label>
+                        <button id="btn_power" class="fa fa-plus-square-o"></button>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <img th:src="@{/img/add.png}" style="width: 1rem;">
+                    <img th:src="@{/img/add.png}" style="width: 1rem;">
+                    <img th:src="@{/img/add.png}" style="width: 1rem;">
+                    <img th:src="@{/img/add.png}" style="width: 1rem;">
+                    <img th:src="@{/img/add.png}" style="width: 1rem;">
+                    <img th:src="@{/img/timg1.jpg}" style="width: 1rem;">
+                    <img th:src="@{/img/lufei.jpg}" style="width: 1rem;">
+                    <img th:src="@{/img/1.jpg}" style="width: 1rem;">
+                    <img th:src="@{/img/1.jpg}" style="width: 1rem;">
+                </td>
+            </tr>
+            <tr>
+                <td class="td_left">温度：</td>
+                <td class="td_center">
+                    <label style="margin-right: 1rem">
+                        <input class="radio_style" type="radio" name="tempure" value="1">正常
+                    </label>
+                    <label>
+                        <input class="radio_style" type="radio" name="tempure" value="0">异常
+                    </label>
+                </td>
+                <td class="td_right">
+                    <label>
+                        <button id="btn_tempure" class="fa fa-plus-square-o"></button>
+                    </label>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <button id="btn_submit" class="weui_btn weui_btn_warn btn_style weui_dialog_confirm">提交</button>
+</body>
+</html>

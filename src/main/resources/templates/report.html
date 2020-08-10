@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,inital-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>巡检报告</title>
+    <link rel="stylesheet" th:href="@{/css/weui.min.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <!--<script th:src="@{/js/jweixin-1.6.0.js}"></script>-->
+    <style>
+        .table1 {
+            text-align: center;
+            margin: 0.5rem auto;
+        }
+        .table1 tr td {
+            /*margin-right: 50px;*/
+            padding-right: 1rem;
+        }
+        .table2 {
+            text-align: center;
+            vertical-align: bottom;
+            margin: 0.5rem auto;
+            border: 1px solid #999999;
+            border-collapse: collapse;
+        }
+        .table2 tr td {
+            /*padding-right: 1rem;*/
+            padding: 0 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        // $(function () {
+        //     $.ajax({
+        //         url: "/getSignature",
+        //         type: 'get',
+        //         dataType: 'json',
+        //         success: function (data) {
+        //             wx.config({
+        //                 beta: true,
+        //                 debug: true,
+        //                 appId: 'ww99fb52ea64503670',
+        //                 timestamp: data.timestamp,
+        //                 noncestr: data.nonce_str,
+        //                 signature: data.signature,
+        //                 jsApiList: ['checkJsApi', 'chooseImage']
+        //             });
+        //             wx.read(function () {
+        //                 alert("请求成功啦！");
+        //             });
+        //
+        //         }
+        //     })
+        // })
+        $(function () {
+            // var time = new Date();
+            // var year = time.getFullYear();
+            // var month = (time.getMonth()+1) < 10 ? "0" + (time.getMonth()+1): time.getMonth()+1;
+            // var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
+            // var today = year + "-" + month + "-" + day;
+            var today = formateDate();
+            $("#startTime").val(today);
+            $("#endTime").val(today);
+            function formateDate() {
+                var time = new Date();
+                if(arguments.length != 0) {
+                    time.setTime(arguments[0]);
+                }
+                var year = time.getFullYear();
+                var month = (time.getMonth()+1) < 10 ? "0" + (time.getMonth()+1): time.getMonth()+1;
+                var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
+                var today = year + "-" + month + "-" + day;
+                return today;
+            };
+            $("#date_select").click(function () {
+                var startTime = $("#startTime").val();
+                var endTime = $("#endTime").val();
+                $.ajax({
+                    url: "/queryReport",
+                    type: 'post',
+                    dataType: 'json',
+                    // contentType: 'application/json',
+                    data: {
+                        startTime: startTime,
+                        endTime: endTime
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    }
+                })
+            })
+
+        })
+    </script>
+</head>
+<body>
+    <table class="table1">
+        <tr>
+            <td>开始</td>
+            <td>
+                <input type="date" name="startTime" id="startTime"/>
+            </td>
+            <td rowspan="2">
+                <button id="date_select" class="weui_btn weui_btn_warn weui_btn_mini" style="">提交</button>
+            </td>
+        </tr>
+        <tr>
+            <td>结束</td>
+            <td>
+                <input type="date" name="endTime" id="endTime"/>
+            </td>
+        </tr>
+    </table>
+    <p th:text="${s}"></p>
+
+    <table class="table2" th:each="query : ${querys}">
+        <tr>
+            <td th:text="${query.name}"></td>
+            <!--<td>苑凯歌</td>-->
+            <td th:text="${#dates.format(query.date, 'yyyy-MM-dd')}"></td>
+            <!--<td>2020-08-05</td>-->
+            <td>上海</td>
+            <!--<td>上海</td>-->
+        </tr>
+        <tr>
+            <td>电源：</td>
+            <td th:text="${query.power}"></td>
+            <td>
+                <img th:each="path : ${query.powerImagePath}" th:src="${path}" style="width: 1rem;">
+            </td>
+        </tr>
+        <tr>
+            <td>温度：</td>
+            <td th:text="${query.tempure}"></td>
+            <td>
+                <img th:each="path : ${query.tempureImagePath}" th:src="${path}" style="width: 1rem;">
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
