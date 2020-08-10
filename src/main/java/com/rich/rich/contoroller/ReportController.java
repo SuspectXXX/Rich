@@ -10,12 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
 
 
 @Controller
+@ResponseBody
 public class ReportController {
 
     @Autowired
@@ -23,15 +25,17 @@ public class ReportController {
 
     @RequestMapping("/queryReport")
     public String report(@RequestParam String startTime, @RequestParam String endTime, Map<String, Object> map) {
-//        JSONObject json = new JSONObject();
-//        List<Querys> querysList = reportService.selectQueryOrder(startTime, endTime);
+        JSONObject json = new JSONObject();
+        List<Querys> querysList = reportService.selectQueryOrder(startTime, endTime);
 //        json.put("querys", queryOrder);
 //        for (Querys q : querysList) {
 //            System.out.println(q);
 //        }
 //        map.put("querys", querysList);
 //        map.put("s", 123);
-//        json.put("querysList", querysList);
-        return "1";
+        json.put("querysList", querysList);
+//        System.out.println(startTime);
+//        System.out.println(endTime);
+        return json.toJSONString();
     }
 }
